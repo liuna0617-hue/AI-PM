@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { Bell, Save } from "lucide-react";
 
 export function ReminderSettingsForm({
   initialEnabled,
@@ -32,16 +33,19 @@ export function ReminderSettingsForm({
 
   return (
     <div className="space-y-5">
-      <label className="flex items-center gap-3">
-        <input type="checkbox" checked={enabled} onChange={(event) => setEnabled(event.target.checked)} />
-        <span className="font-medium">开启每日微信提醒</span>
+      <label className="flex items-center gap-3 rounded-2xl border border-line bg-paper p-4">
+        <input type="checkbox" checked={enabled} onChange={(event) => setEnabled(event.target.checked)} className="h-4 w-4 accent-river" />
+        <span className="flex items-center gap-2 font-medium">
+          <Bell className="h-4 w-4 text-river" />
+          开启每日微信提醒
+        </span>
       </label>
       <label className="block">
         <span className="text-sm font-medium">PushPlus token</span>
         <input
           value={pushplusToken}
           onChange={(event) => setPushplusToken(event.target.value)}
-          className="focus-ring mt-2 w-full rounded-md border border-ink/15 bg-white px-3 py-2"
+          className="focus-ring mt-2 w-full rounded-xl border border-line bg-paper px-3 py-2.5 shadow-sm transition focus:border-river"
           placeholder="从 PushPlus 获取你的 token"
         />
       </label>
@@ -51,11 +55,12 @@ export function ReminderSettingsForm({
           type="time"
           value={reminderTime}
           onChange={(event) => setReminderTime(event.target.value)}
-          className="focus-ring mt-2 rounded-md border border-ink/15 bg-white px-3 py-2"
+          className="focus-ring mt-2 rounded-xl border border-line bg-paper px-3 py-2.5 shadow-sm transition focus:border-river"
         />
       </label>
-      {message ? <p className="rounded-md bg-river/10 px-3 py-2 text-sm text-river">{message}</p> : null}
-      <button onClick={save} disabled={loading} className="focus-ring rounded-md bg-ink px-4 py-2 font-medium text-white hover:bg-moss disabled:opacity-60">
+      {message ? <p className="rounded-xl border border-river/15 bg-river/10 px-3 py-2 text-sm text-river">{message}</p> : null}
+      <button onClick={save} disabled={loading} className="focus-ring inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-river to-cyan px-4 py-2.5 font-semibold text-white shadow-soft transition hover:brightness-105 disabled:opacity-60">
+        <Save className="h-4 w-4" />
         {loading ? "保存中..." : "保存提醒设置"}
       </button>
     </div>

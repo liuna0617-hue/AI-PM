@@ -1,7 +1,10 @@
 import { prisma } from "./prisma";
 import { getCurrentStageTasks, getStageById, getTaskByDay, learningStages } from "./curriculum";
+import { completeDemoDay, getDemoProgress, isDemoUserId } from "./demo";
 
 export async function ensureProgress(userId: string) {
+  if (isDemoUserId(userId)) return getDemoProgress();
+
   const existing = await prisma.userProgress.findUnique({ where: { userId } });
   if (existing) return existing;
 
@@ -16,10 +19,12 @@ export async function ensureProgress(userId: string) {
 
 export async function getDashboardData(userId: string) {
   const progress = await ensureProgress(userId);
-  const notes = await prisma.learningNote.findMany({
-    where: { userId },
-    orderBy: { createdAt: "desc" },
-  });
+  const notes = isDemoUserId(userId)
+    ? []
+    : await prisma.learningNote.findMany({
+        where: { userId },
+        orderBy: { createdAt: "desc" },
+      });
 
   const isCompleted = progress.completedDaysCount >= 60;
   const currentDay = isCompleted ? 60 : progress.currentDay;
@@ -51,6 +56,23 @@ export async function submitCurrentNote(userId: string, content: string) {
 
   const day = progress.currentDay;
   const task = getTaskByDay(day);
+  const trimmed = content.trim();
+  if (!trimmed) {
+    throw new Error("请先写下今天的学习笔记");
+  }
+
+  if (isDemoUserId(userId)) {
+    completeDemoDay();
+    return {
+      id: "demo-note",
+      userId,
+      day,
+      stageId: task.stageId,
+      taskTitle: task.title,
+      content: trimmed,
+      createdAt: new Date(),
+    };
+  }
 
   const existing = await prisma.learningNote.findUnique({
     where: {
@@ -63,11 +85,6 @@ export async function submitCurrentNote(userId: string, content: string) {
 
   if (existing) {
     throw new Error("今天的任务已经完成");
-  }
-
-  const trimmed = content.trim();
-  if (!trimmed) {
-    throw new Error("请先写下今天的学习笔记");
   }
 
   return prisma.$transaction(async (tx) => {

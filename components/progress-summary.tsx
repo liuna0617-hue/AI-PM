@@ -1,3 +1,5 @@
+import { TrendingUp } from "lucide-react";
+
 export function ProgressSummary({
   completedDays,
   currentDay,
@@ -10,21 +12,24 @@ export function ProgressSummary({
   stageName: string;
 }) {
   return (
-    <section className="rounded-lg border border-ink/10 bg-white p-5 shadow-soft">
-      <div className="flex items-center justify-between">
+    <section className="rounded-2xl border border-river/15 bg-white p-5 shadow-soft">
+      <div className="flex items-start justify-between gap-4">
         <div>
-          <p className="text-sm text-ink/60">当前进度</p>
-          <h2 className="mt-1 text-2xl font-semibold">{percent}%</h2>
+          <p className="flex items-center gap-2 text-sm font-semibold text-river">
+            <TrendingUp className="h-4 w-4" />
+            当前进度
+          </p>
+          <h2 className="mt-2 text-4xl font-semibold text-river">{percent}%</h2>
         </div>
-        <div className="text-right text-sm text-ink/70">
+        <div className="rounded-2xl bg-mist px-4 py-3 text-right text-sm text-ink/70">
           <p>已完成 {completedDays}/60 天</p>
           <p>当前第 {currentDay} 天</p>
         </div>
       </div>
-      <div className="mt-4 h-2 rounded-full bg-ink/10">
-        <div className="h-2 rounded-full bg-river" style={{ width: `${percent}%` }} />
+      <div className="mt-5 h-3 rounded-full bg-line">
+        <div className="h-3 rounded-full bg-gradient-to-r from-river to-cyan" style={{ width: `${percent}%` }} />
       </div>
-      <p className="mt-3 text-sm text-ink/70">当前阶段：{stageName}</p>
+      <p className="mt-4 rounded-xl bg-amber/10 px-3 py-2 text-sm text-amber">当前阶段：{stageName}</p>
     </section>
   );
 }

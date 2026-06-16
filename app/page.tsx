@@ -1,4 +1,6 @@
 import { redirect } from "next/navigation";
+import { CheckCircle2, Languages, NotebookPen } from "lucide-react";
+import type { ReactNode } from "react";
 import { AppShell } from "@/components/app-shell";
 import { CurrentTaskCard } from "@/components/current-task-card";
 import { ProgressSummary } from "@/components/progress-summary";
@@ -22,13 +24,13 @@ export default async function DashboardPage() {
             percent={dashboard.completionPercent}
             stageName={dashboard.currentStage.name}
           />
-          <section className="rounded-lg border border-ink/10 bg-white p-5 shadow-soft">
+          <section className="rounded-2xl border border-river/15 bg-white p-5 shadow-soft">
             <h2 className="text-lg font-semibold">学习规则</h2>
-            <ul className="mt-3 space-y-2 text-sm leading-6 text-ink/70">
-              <li>提交当天笔记即完成任务。</li>
-              <li>未完成时会停留在当前天。</li>
-              <li>英文资源可使用转中文助手。</li>
-            </ul>
+            <div className="mt-4 grid gap-3">
+              <Rule icon={<NotebookPen className="h-4 w-4" />} text="提交当天笔记即完成任务。" />
+              <Rule icon={<CheckCircle2 className="h-4 w-4" />} text="未完成时会停留在当前天。" />
+              <Rule icon={<Languages className="h-4 w-4" />} text="英文资源可使用转中文助手。" />
+            </div>
           </section>
         </div>
       </div>
@@ -42,5 +44,14 @@ export default async function DashboardPage() {
         />
       </div>
     </AppShell>
+  );
+}
+
+function Rule({ icon, text }: { icon: ReactNode; text: string }) {
+  return (
+    <div className="flex items-center gap-3 rounded-xl border border-line bg-paper px-3 py-3 text-sm text-ink/72">
+      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-river/10 text-river">{icon}</span>
+      <span>{text}</span>
+    </div>
   );
 }

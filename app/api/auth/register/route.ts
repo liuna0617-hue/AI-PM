@@ -12,25 +12,31 @@ export async function POST(request: Request) {
   }
 
   const { name, email, password } = parsed.data;
-  const existing = await prisma.user.findUnique({ where: { email } });
-  if (existing) {
-    return NextResponse.json({ error: "这个邮箱已经注册" }, { status: 409 });
+
+  try {
+    const existing = await prisma.user.findUnique({ where: { email } });
+    if (existing) {
+      return NextResponse.json({ error: "这个邮箱已经注册" }, { status: 409 });
+    }
+
+    const passwordHash = await bcrypt.hash(password, 12);
+    const user = await prisma.user.create({
+      data: {
+        name,
+        email,
+        passwordHash,
+        progress: { create: { currentDay: 1, completedDaysCount: 0 } },
+        reminderSetting: { create: { enabled: false, reminderTime: "20:00" } },
+      },
+    });
+
+    const session = await getSession();
+    session.userId = user.id;
+    await session.save();
+
+    return NextResponse.json({ ok: true });
+  } catch (error) {
+    console.error("Registration failed", error);
+    return NextResponse.json({ error: "数据库暂时不可用，请确认本地 PostgreSQL 已启动" }, { status: 503 });
   }
-
-  const passwordHash = await bcrypt.hash(password, 12);
-  const user = await prisma.user.create({
-    data: {
-      name,
-      email,
-      passwordHash,
-      progress: { create: { currentDay: 1, completedDaysCount: 0 } },
-      reminderSetting: { create: { enabled: false, reminderTime: "20:00" } },
-    },
-  });
-
-  const session = await getSession();
-  session.userId = user.id;
-  await session.save();
-
-  return NextResponse.json({ ok: true });
 }

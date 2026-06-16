@@ -1,6 +1,7 @@
 import { getIronSession } from "iron-session";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { DEMO_USER_ID, getDemoCredentials, isDemoMode } from "./demo";
 import { prisma } from "./prisma";
 
 export type SessionData = {
@@ -30,6 +31,17 @@ export async function getSession() {
 export async function getCurrentUser() {
   const session = await getSession();
   if (!session.userId) return null;
+
+  if (isDemoMode() && session.userId === DEMO_USER_ID) {
+    const demo = getDemoCredentials();
+    return {
+      id: DEMO_USER_ID,
+      name: demo.name,
+      email: demo.email,
+      passwordHash: "",
+      createdAt: new Date(),
+    };
+  }
 
   return prisma.user.findUnique({
     where: { id: session.userId },

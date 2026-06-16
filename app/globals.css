@@ -12,7 +12,9 @@
 
 body {
   margin: 0;
-  background: #f7f5ef;
+  background:
+    radial-gradient(circle at 10% 6%, rgba(17, 181, 200, 0.16), transparent 28%),
+    linear-gradient(180deg, #eef7ff 0%, #f7fbff 42%, #ffffff 100%);
   color: #17201a;
   font-family: Arial, "Microsoft YaHei", sans-serif;
 }
@@ -35,5 +37,5 @@ select {
 }
 
 .focus-ring:focus-visible {
-  outline-color: #2f6f8f;
+  outline-color: #0b5cff;
 }

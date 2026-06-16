@@ -15,16 +15,16 @@ export function Roadmap({
   currentStageTasks: LearningTask[];
 }) {
   return (
-    <section className="rounded-lg border border-ink/10 bg-white p-5 shadow-soft">
+    <section className="rounded-2xl border border-river/15 bg-white p-5 shadow-soft">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <p className="flex items-center gap-2 text-sm font-medium text-river">
+          <p className="flex items-center gap-2 text-sm font-semibold text-river">
             <Map className="h-4 w-4" />
             学习路线
           </p>
-          <h2 className="mt-1 text-xl font-semibold">60天 AI 产品经理成长地图</h2>
+          <h2 className="mt-1 text-xl font-semibold">60 天 AI 产品经理成长地图</h2>
         </div>
-        <p className="text-sm text-ink/60">阶段卡片默认收起，点击查看详情</p>
+        <p className="rounded-full bg-mist px-3 py-1.5 text-sm text-ink/60">点击阶段卡片查看详情</p>
       </div>
 
       <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
@@ -38,27 +38,27 @@ export function Roadmap({
           return (
             <details
               key={stage.id}
-              className={`group relative rounded-lg border bg-white p-4 transition ${
+              className={`group relative rounded-2xl border p-4 transition ${
                 isCurrent
-                  ? "border-river shadow-soft"
+                  ? "border-river bg-mist shadow-soft"
                   : isCompleted
-                    ? "border-moss/30 bg-moss/5"
-                    : "border-ink/10 bg-paper"
+                    ? "border-moss/25 bg-moss/5"
+                    : "border-line bg-white"
               }`}
             >
               {index < stages.length - 1 ? (
-                <div className="pointer-events-none absolute left-[calc(100%-2px)] top-9 hidden h-px w-4 bg-ink/15 xl:block" />
+                <div className="pointer-events-none absolute left-[calc(100%-2px)] top-9 hidden h-px w-4 bg-line xl:block" />
               ) : null}
 
               <summary className="flex cursor-pointer list-none items-start justify-between gap-3 [&::-webkit-details-marker]:hidden">
                 <div className="flex gap-3">
                   <div
-                    className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full border text-sm font-semibold ${
+                    className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-full border text-sm font-semibold ${
                       isCurrent
                         ? "border-river bg-river text-white"
                         : isCompleted
                           ? "border-moss bg-moss text-white"
-                          : "border-ink/15 bg-white text-ink/50"
+                          : "border-line bg-paper text-ink/50"
                     }`}
                   >
                     {index + 1}
@@ -74,7 +74,7 @@ export function Roadmap({
                 <ChevronDown className="mt-1 h-5 w-5 shrink-0 text-ink/45 transition group-open:rotate-180" />
               </summary>
 
-              <div className="mt-4 border-t border-ink/10 pt-4">
+              <div className="mt-4 border-t border-line pt-4">
                 <p className="text-sm leading-6 text-ink/70">{stage.goal}</p>
 
                 {isCurrent ? (
@@ -84,12 +84,12 @@ export function Roadmap({
                       {stageTasks.map((task) => (
                         <div
                           key={task.day}
-                          className={`rounded-md border px-3 py-2 text-sm ${
+                          className={`rounded-xl border px-3 py-2 text-sm ${
                             task.day === currentDay
                               ? "border-river bg-river text-white"
                               : task.day < currentDay
                                 ? "border-moss/20 bg-moss/10 text-moss"
-                                : "border-ink/10 bg-white text-ink/70"
+                                : "border-line bg-white text-ink/70"
                           }`}
                         >
                           <div className="flex items-center justify-between gap-3">
@@ -125,7 +125,7 @@ function StatusPill({
 
   return (
     <span
-      className={`inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-medium ${
+      className={`inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-semibold ${
         isCurrent
           ? "bg-river/10 text-river"
           : isCompleted
