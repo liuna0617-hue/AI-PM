@@ -20,7 +20,7 @@ export async function getSession() {
     cookieName: "ai_pm_session",
     password: sessionPassword(),
     cookieOptions: {
-      secure: process.env.NODE_ENV === "production",
+      secure: process.env.APP_URL?.startsWith("https://") ?? false,
       sameSite: "lax",
       httpOnly: true,
     },
