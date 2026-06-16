@@ -1,0 +1,82 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id              String           @id @default(cuid())
+  name            String
+  email           String           @unique
+  passwordHash    String
+  createdAt       DateTime         @default(now())
+  progress        UserProgress?
+  notes           LearningNote[]
+  reminderSetting ReminderSetting?
+  translationJobs TranslationJob[]
+  reminderLogs    ReminderLog[]
+}
+
+model UserProgress {
+  id                 String    @id @default(cuid())
+  userId             String    @unique
+  currentDay         Int       @default(1)
+  completedDaysCount Int       @default(0)
+  latestCompletedAt  DateTime?
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+  user               User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model LearningNote {
+  id        String   @id @default(cuid())
+  userId    String
+  day       Int
+  stageId   String
+  taskTitle String
+  content   String
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, day])
+}
+
+model ReminderSetting {
+  id            String   @id @default(cuid())
+  userId        String   @unique
+  enabled       Boolean  @default(false)
+  pushplusToken String?
+  reminderTime  String   @default("20:00")
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model TranslationJob {
+  id             String   @id @default(cuid())
+  userId         String
+  sourceType     String
+  sourceTitle    String?
+  originalText   String
+  translatedText String
+  bilingualText  String
+  keyPoints      String
+  pmInsights     String
+  noteDraft      String
+  createdAt      DateTime @default(now())
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model ReminderLog {
+  id        String   @id @default(cuid())
+  userId    String
+  day       Int
+  sentDate  String
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, day, sentDate])
+}
